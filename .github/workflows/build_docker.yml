@@ -21,7 +21,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: dockerhub16/alist:latest
+          images: dockerhub16/alist
       - name: Replace release with dev
         run: |
           sed -i 's/release/dev/g' Dockerfile
