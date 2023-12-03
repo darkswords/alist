@@ -17,14 +17,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set branch as tag
-        run: echo "::set-output name=BRANCH_NAME::${GITHUB_REF#refs/heads/}"  
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: dockerhub16/alist:latest
-          images: dockerhub16/alist:${{ steps.meta.outputs.BRANCH_NAME }}
       - name: Replace release with dev
         run: |
           sed -i 's/release/dev/g' Dockerfile
