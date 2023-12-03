@@ -19,7 +19,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: dockerhub 16/alist
+          images: dockerhub16/alist
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
