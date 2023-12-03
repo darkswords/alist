@@ -59,10 +59,10 @@ jobs:
 
       - name: Commit
         run: |
-          # git config --local user.email "bot@nn.ci"
-          # git config --local user.name "IlaBot"
-          git config --local user.email "${{ secrets.GIT_EMAIL }}"  
-          git config --local user.name "${{ secrets.GIT_USERNAME }}"
+          git config --local user.email "bot@nn.ci"
+          git config --local user.name "IlaBot"
+          # git config --local user.email "${{ secrets.GIT_EMAIL }}"  
+          # git config --local user.name "${{ secrets.GIT_USERNAME }}"
           git commit --allow-empty -m "Trigger build for ${{ github.sha }}"
 
       - name: Push commit
