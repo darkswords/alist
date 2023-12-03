@@ -1,4 +1,4 @@
-oname: build_docker
+name: build_docker
 
 #on:
 #  push:
