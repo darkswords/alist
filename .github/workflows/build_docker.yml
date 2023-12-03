@@ -40,8 +40,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: |
+            dockerhub16/alist:${{ github.ref }}
+            dockerhub16/alist:latest
+          # tags: ${{ steps.meta.outputs.tags }}
+          # labels: ${{ steps.meta.outputs.labels }}
           platforms: linux/amd64,linux/arm64
 
   build_docker_with_aria2:
