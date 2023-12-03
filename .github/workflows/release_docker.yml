@@ -58,8 +58,10 @@ jobs:
 
       - name: Add tag
         run: |
-          git config --local user.email "bot@nn.ci"
-          git config --local user.name "IlaBot"
+          # git config --local user.email "bot@nn.ci"
+          # git config --local user.name "IlaBot"
+          git config --local user.email "${{ secrets.USER_EMAIL }}"
+          git config --local user.name "${{ secrets.USER_NAME }}
           git tag -a ${{ github.ref_name }} -m "release ${{ github.ref_name }}"
 
       - name: Push tags
