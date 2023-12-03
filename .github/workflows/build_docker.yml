@@ -1,4 +1,4 @@
-name: build_docker
+oname: build_docker
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: xhofe/alist
+          images: dockerhub16/alist
       - name: Replace release with dev
         run: |
           sed -i 's/release/dev/g' Dockerfile
@@ -30,7 +30,7 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
-          username: xhofe
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push
         id: docker_build
