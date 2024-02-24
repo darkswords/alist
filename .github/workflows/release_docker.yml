@@ -1,9 +1,11 @@
 name: release_docker
 
+# on:
+#  push:
+#    tags:
+#      - '*'
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
 
 jobs:
   release_docker:
@@ -11,61 +13,34 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - uses: actions/setup-go@v4
-        with:
-          go-version: 'stable'
-
-      - name: Build go binary
-        run: bash build.sh release docker-multiplatform
+        uses: actions/checkout@v3
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v4
         with:
-          images: xhofe/alist
+          images: ${{ secrets.DOCKERHUB_USERNAME }}/alist
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v2
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v2
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v2
         with:
-          username: xhofe
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v4
         with:
           context: .
-          file: Dockerfile.ci
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/386,linux/arm/v6,linux/s390x
-
-      - name: Docker meta with ffmpeg
-        id: meta-ffmpeg
-        uses: docker/metadata-action@v5
-        with:
-          images: xhofe/alist
-          flavor: |
-            latest=true
-            suffix=-ffmpeg,onlatest=true
-            
-      - name: Build and push with ffmpeg
-        id: docker_build_ffmpeg
-        uses: docker/build-push-action@v5
-        with:
-          file: Dockerfile.ffmpeg
-          push: true
-          tags: ${{ steps.meta-ffmpeg.outputs.tags }}
-          labels: ${{ steps.meta-ffmpeg.outputs.labels }}
           platforms: linux/amd64,linux/arm64,linux/arm/v7,linux/386,linux/arm/v6,linux/s390x
 
   release_docker_with_aria2:
@@ -74,9 +49,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
         with:
-          repository: alist-org/with_aria2
+          repository: DarkSwords/with_aria2
           ref: main
           persist-credentials: false
           fetch-depth: 0
@@ -85,11 +60,12 @@ jobs:
         run: |
           git config --local user.email "bot@nn.ci"
           git config --local user.name "IlaBot"
+          # git config --local user.email "${{ secrets.USER_EMAIL }}"
+          # git config --local user.name "${{ secrets.USER_NAME }}
           git tag -a ${{ github.ref_name }} -m "release ${{ github.ref_name }}"
-
       - name: Push tags
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.MY_TOKEN }}
           branch: main
-          repository: alist-org/with_aria2
+          repository: DarkSwords/with_aria2
